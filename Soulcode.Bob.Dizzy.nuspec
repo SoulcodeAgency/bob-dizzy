@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
   <package >
     <metadata>
-      <id>Unic.Bob.Dizzy</id>
+      <id>Soulcode.Bob.Dizzy</id>
       <authors>Unic AG</authors>
       <version>$VERSION$</version>
       <owners>Unic AG</owners>
