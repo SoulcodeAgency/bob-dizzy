@@ -21,6 +21,12 @@ The folder where the resulting NuGet package should be placed.
 .PARAMETER Folders
 An array of folders inside the $Path to be included in the NuGet package.
 
+.PARAMETER Author
+The Author of the package to generate. Defaults to "Unic AG".
+
+.PARAMETER IconUrl
+The IconUrl to be used for the package. Defaults to Unic AG Icon.
+
 .EXAMPLE
 Write-FrontendPackage -Version 1.2.3 -Id My.Frontend -Path .\frontend -OutputLocation .\output
 
@@ -40,7 +46,9 @@ function Write-FrontendPackage
       [string] $Path,
       [Parameter(Mandatory=$true)]
       [string] $OutputLocation,
-      [string[]] $Folders = @("assets")
+      [string[]] $Folders = @("assets"),
+      [string] $Author = "Unic AG",
+      [string] $IconUrl = "https://www.unic.com/img/unic-logo.png"
   )
   Process
   {
@@ -56,7 +64,7 @@ function Write-FrontendPackage
     $nuspec = "${env:TEMP}\Frontend.nuspec"
     $template | Out-File $nuspec -Encoding UTF8
 
-    & $nuget pack $nuspec -p "ID=$Id" -version $Version -BasePath $Path -o $OutputLocation
+    & $nuget pack $nuspec -p "ID=$Id" -p "AUTHOR=$Author" -p "ICONURL=$IconUrl" -version $Version -BasePath $Path -o $OutputLocation
     if($LASTEXITCODE -ne 0) {
         Write-Error "NuGet package generation failed"
     }

@@ -2,10 +2,10 @@
   <package >
     <metadata>
       <id>$ID$</id>
-      <authors>Unic AG</authors>
+      <authors>$AUTHOR$</authors>
       <version>$VERSION$</version>
-      <owners>Unic AG</owners>
-      <iconUrl>https://www.unic.com/img/unic-logo.png</iconUrl>
+      <owners>$AUTHOR$</owners>
+      <iconUrl>$ICONURL$</iconUrl>
       <requireLicenseAcceptance>false</requireLicenseAcceptance>
       <description>$ID$</description>
     </metadata>
