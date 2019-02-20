@@ -38,7 +38,15 @@ If no version is specified for a package, the version will be detected according
 
 * develop: Dizzy will try to get a *-develop* package with the same version as the current develop<sup>1)</sup> branch. If there is none the newest *-release* will be used.
 * release/\* or hotfix/\*: Newest with *-release*
-* feature/\*: Newest with *-develop*
+* feature/\*: Newest with *-featurename, *-develop*
+
+Additionally, if there is a key `FeatureBranchIssueKeyRegex` in Bob.config, the version pattern for `feature/\*` will be extended with the capture of the provided Regex as well:
+
+```
+<FeatureBranchIssueKeyRegex>MyJiraKey-[0-9]*</FeatureBranchIssueKeyRegex>
+```
+* feature/\*: Newest with *-featurename, *-MyJiraKey-\<Number\>, *-develop*
+(if the current feature branch starts with MyJiraKey-\<Number\>)
 
 Optionally a parameter can be added to *Install-ScNugetPackage* which specifies which packages should be installed.
 

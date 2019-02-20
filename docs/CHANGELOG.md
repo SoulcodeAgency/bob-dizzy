@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1
+
+* Added support for feature branch name mappings
+
 ## 4.0.1
 
 * Version matching pattern updated to use wildcard for suffix

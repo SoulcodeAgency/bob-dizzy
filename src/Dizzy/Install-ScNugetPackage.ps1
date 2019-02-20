@@ -54,13 +54,28 @@ function Install-ScNugetPackage {
                     "hotfix/*" {
                         "$version-$releasePattern"
                     }
+                    "feature/*" {
+                        $featureName = $branch -replace "feature/", ""
+                        if ($config.FeatureBranchIssueKeyRegex -and $featureName -match $config.FeatureBranchIssueKeyRegex) {
+                            "$version-$($featureName.Substring(0, 15))*",  "$version-$($Matches[0])*", "$version-develop*" 
+                        }
+                        else {
+                            "$version-$($featureName.Substring(0, 15))", "$version-develop*"
+                        }
+                    }
                     default {
                         "$version-develop*"
                     }
                 }
             }
             
-            return $pattern,  "*-$releasePattern"
+            if ($pattern -is [array]) {
+                $pattern += "*-$releasePattern"
+            }
+            else {
+                $pattern = $pattern, "*-$releasePattern"
+            }
+            return $pattern
         }
 
 
@@ -133,19 +148,19 @@ function Install-ScNugetPackage {
                 Write-Verbose "Skip $($package.ID)"  
                 continue;
             }
-            Write-Verbose "Start instalation of $($package.ID)"
+            Write-Verbose "Start installation of $($package.ID)"
 
             $versionPatterns = $package.Version
             if(-not $versionPatterns) {
                 Write-Verbose "    No version is specified for $($package.ID). Calculate version pattern according to current context:"
                 $versionPatterns = GetPackageVersion $package.ID $config.NuGetFeed $config
             }
-            
+
             Write-Verbose "    Get newest package of $($package.ID) with version pattern $([string]::Join(", ", $versionPatterns))"
 
             $nugetPackageToInstall = GetNugetPackage $package.ID $versionPatterns $config.NuGetFeed
             if(-not $nugetPackageToInstall) {
-                Write-Error "No package was found with ID $($package.ID) and version pattern $($versionPatterns) on the NuGet feed $($config.NuGetFeed)"
+                Write-Error "No package was found with ID $($package.ID) and version pattern  $([string]::Join(", ", $versionPatterns)) on the NuGet feed $($config.NuGetFeed)"
             }
             Write-Verbose "    Found version $($nugetPackageToInstall.Version) of package $($package.ID)"
 
