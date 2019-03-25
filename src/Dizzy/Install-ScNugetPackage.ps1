@@ -56,11 +56,14 @@ function Install-ScNugetPackage {
                     }
                     "feature/*" {
                         $featureName = $branch -replace "feature/", ""
+                        if ($featureName.length -gt 15) {
+                            $featureName = $featureName.Substring(0, 15)
+                        }
                         if ($config.FeatureBranchIssueKeyRegex -and $featureName -match $config.FeatureBranchIssueKeyRegex) {
-                            "$version-$($featureName.Substring(0, 15))*",  "$version-$($Matches[0])*", "$version-develop*" 
+                            "$version-$($featureName)*",  "$version-$($Matches[0])*", "$version-develop*" 
                         }
                         else {
-                            "$version-$($featureName.Substring(0, 15))", "$version-develop*"
+                            "$version-$($featureName)", "$version-develop*"
                         }
                     }
                     default {
