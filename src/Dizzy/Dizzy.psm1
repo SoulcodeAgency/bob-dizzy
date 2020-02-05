@@ -23,4 +23,3 @@ Import-Module (ResolvePath "Unic.Bob.Skip" "Skip") -Force
 $VerbosePreference = "Continue"
 [System.Reflection.Assembly]::LoadFrom((ResolvePath "Nuget.Core" "lib\net40-client\NuGet.Core.dll"))
 [System.Reflection.Assembly]::LoadFrom((ResolvePath "LibGit2Sharp" "LibGit2Sharp.dll"))
-[System.Reflection.Assembly]::LoadFrom((ResolvePath "GitVersion" "lib\net45\GitVersionCore.dll"))
