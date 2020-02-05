@@ -38,10 +38,11 @@ function Install-ScNugetPackage {
 
     process {
          function GetPackageVersion {
-            param($packageId, $source, $config)
+            param($packageId, $source, $config, $projectPath)
 
-            $repoContext = GetRepoContext $config
-            $version = $repoContext.version
+            $gitversion = ResolvePath -PackageId "GitVersion.CommandLine" -RelativePath "tools\Gitversion.exe"
+            $versionInfo = & $gitversion "$projectPath" | ConvertFrom-Json
+            $version = $versionInfo.MajorMinorPatch
 
             $releasePattern = "release*"
 
@@ -79,40 +80,6 @@ function Install-ScNugetPackage {
                 $pattern = $pattern, "*-$releasePattern"
             }
             return $pattern
-        }
-
-
-        function GetRepoContext {
-            param($config)
-            $website = Resolve-Path $config.WebsitePath
-            $repoDir = GetDirecectoryContainingSubdir $website ".git"
-            if(-not $repoDir) {
-                Write-Error "$website does not contain a git repository."
-            }
-
-            $repo = New-Object LibGit2Sharp.Repository $repoDir
-
-            $branch = $repo.Head.FriendlyName
-            if($branch -eq "(no branch)") {
-                Write-Error "HEAD is detached. Please ensure you are on a valid branch or provide the 'Branch' parameter."
-            }
-
-            [GitVersion.Logger]::SetLoggers({}, {}, {})
-
-            $gitVersionConfig = New-Object GitVersion.Config
-            [GitVersion.ConfigurationProvider]::ApplyDefaultsTo($gitVersionConfig)
-            $ctx = New-Object GitVersion.GitVersionContext $repo, $gitVersionConfig
-            $versionFinder = New-Object GitVersion.GitVersionFinder
-            $version = $versionFinder.FindVersion($ctx).ToString("j")
-
-            Write-Verbose "        Current Branch on repository: $Branch"
-            Write-Verbose "        Version of repository:  $Version"
-
-            return @{
-                "branch" = $branch
-                "version" = $version
-            }
-
         }
 
         function GetNugetPackage {
@@ -156,7 +123,7 @@ function Install-ScNugetPackage {
             $versionPatterns = $package.Version
             if(-not $versionPatterns) {
                 Write-Verbose "    No version is specified for $($package.ID). Calculate version pattern according to current context:"
-                $versionPatterns = GetPackageVersion $package.ID $config.NuGetFeed $config
+                $versionPatterns = GetPackageVersion $package.ID $config.NuGetFeed $config $ProjectPath
             }
 
             Write-Verbose "    Get newest package of $($package.ID) with version pattern $([string]::Join(", ", $versionPatterns))"

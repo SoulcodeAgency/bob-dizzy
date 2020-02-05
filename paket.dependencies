@@ -1,6 +1,5 @@
 source https://nuget.org/api/v2
 
-nuget GitVersion
 nuget GitVersion.CommandLine
 nuget libGit2Sharp
 nuget LibGit2Sharp.NativeBinaries

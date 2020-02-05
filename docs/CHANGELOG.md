@@ -3,6 +3,7 @@
 ## 4.1
 
 * Added support for feature branch name mappings
+* Simplyfied git version calculation by using gitversion.commandline instead of gitversion dll
 
 ## 4.0.1
 
