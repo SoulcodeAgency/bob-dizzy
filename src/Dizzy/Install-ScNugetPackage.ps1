@@ -47,7 +47,7 @@ function Install-ScNugetPackage {
             $releasePattern = "release*"
 
             $pattern =  & {
-                $branch = $repoContext.branch -replace "refs/heads/", ""
+                $branch = $versionInfo.BranchName
                 switch -wildcard ($branch) {
                     "release/*" {
                         "$version-$releasePattern"
